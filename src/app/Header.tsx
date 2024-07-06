@@ -1,9 +1,4 @@
-import {
-  OrganizationSwitcher,
-  SignIn,
-  SignInButton,
-  UserButton,
-} from '@clerk/nextjs'
+import { OrganizationSwitcher, SignInButton, UserButton } from '@clerk/nextjs'
 
 export const Header = () => {
   return (
@@ -13,7 +8,7 @@ export const Header = () => {
         <div>
           <OrganizationSwitcher />
           <UserButton />
-          {/* <SignInButton /> */}
+          <SignInButton />
         </div>
       </div>
     </div>

@@ -8,9 +8,9 @@ export const createFile = mutation({
   },
   async handler(ctx, args) {
     console.log('server identity', await ctx.auth.getUserIdentity())
-    // if (!(await ctx.auth.getUserIdentity())) {
-    //   return []
-    // }
+    if (!(await ctx.auth.getUserIdentity())) {
+      throw new ConvexError(' you must login to add data')
+    }
     await ctx.db.insert('files', {
       name: args.name,
       orgId: args.orgId,
@@ -24,9 +24,9 @@ export const getFiles = query({
   },
   async handler(ctx, args) {
     console.log('server identity', await ctx.auth.getUserIdentity())
-    // if (!(await ctx.auth.getUserIdentity())) {
-    //   return []
-    // }
+    if (!(await ctx.auth.getUserIdentity())) {
+      return []
+    }
     return ctx.db
       .query('files')
       .withIndex('by_orgId', (q) => q.eq('orgId', args.orgId))
