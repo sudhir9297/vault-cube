@@ -1,15 +1,8 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { SignedIn, SignOutButton, UserButton } from '@clerk/clerk-react'
-import {
-  SignedOut,
-  SignInButton,
-  useOrganization,
-  useSession,
-  useUser,
-} from '@clerk/nextjs'
-import { useMutation, useQueries, useQuery } from 'convex/react'
+import { useOrganization, useUser } from '@clerk/nextjs'
+import { useMutation, useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 
 export default function Home() {
@@ -33,7 +26,10 @@ export default function Home() {
       <Button
         onClick={() => {
           if (!orgId) return
-          createFile({ name: 'sudhir', orgId })
+          createFile({
+            name: 'hello world',
+            orgId,
+          })
         }}
       >
         Click Me
