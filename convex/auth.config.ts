@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: 'https://moral-airedale-5.clerk.accounts.dev',
+      domain: process.env.CLERK_HOSTNAME,
       applicationID: 'convex',
     },
   ],
