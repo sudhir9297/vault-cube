@@ -1,4 +1,5 @@
 import { httpRouter } from 'convex/server'
+
 import { internal } from './_generated/api'
 import { httpAction } from './_generated/server'
 
@@ -10,6 +11,7 @@ http.route({
   handler: httpAction(async (ctx, request) => {
     const payloadString = await request.text()
     const headerPayload = request.headers
+
     try {
       const result = await ctx.runAction(internal.clerk.fulfill, {
         payload: payloadString,
@@ -24,12 +26,34 @@ http.route({
         case 'user.created':
           await ctx.runMutation(internal.users.createUser, {
             tokenIdentifier: `${process.env.CLERK_HOSTNAME}|${result.data.id}`,
+            name: `${result.data.first_name ?? ''} ${
+              result.data.last_name ?? ''
+            }`,
+            image: result.data.image_url,
+          })
+          break
+        case 'user.updated':
+          await ctx.runMutation(internal.users.updateUser, {
+            tokenIdentifier: `${process.env.CLERK_HOSTNAME}|${result.data.id}`,
+            name: `${result.data.first_name ?? ''} ${
+              result.data.last_name ?? ''
+            }`,
+            image: result.data.image_url,
           })
           break
         case 'organizationMembership.created':
           await ctx.runMutation(internal.users.addOrgIdToUser, {
             tokenIdentifier: `${process.env.CLERK_HOSTNAME}|${result.data.public_user_data.user_id}`,
             orgId: result.data.organization.id,
+            role: result.data.role === 'org:admin' ? 'admin' : 'member',
+          })
+          break
+        case 'organizationMembership.updated':
+          console.log(result.data.role)
+          await ctx.runMutation(internal.users.updateRoleInOrgForUser, {
+            tokenIdentifier: `${process.env.CLERK_HOSTNAME}|${result.data.public_user_data.user_id}`,
+            orgId: result.data.organization.id,
+            role: result.data.role === 'org:admin' ? 'admin' : 'member',
           })
           break
       }
