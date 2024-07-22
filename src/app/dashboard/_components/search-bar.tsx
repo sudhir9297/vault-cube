@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -6,34 +6,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, SearchIcon } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2, SearchIcon } from 'lucide-react'
+import { Dispatch, SetStateAction } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const formSchema = z.object({
   query: z.string().min(0).max(200),
-});
+})
 
 export function SearchBar({
   query,
   setQuery,
 }: {
-  query: string;
-  setQuery: Dispatch<SetStateAction<string>>;
+  query: string
+  setQuery: Dispatch<SetStateAction<string>>
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       query,
     },
-  });
+  })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setQuery(values.query);
+    setQuery(values.query)
   }
 
   return (
@@ -41,34 +41,29 @@ export function SearchBar({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex gap-2 items-center"
+          className="flex items-center"
         >
           <FormField
             control={form.control}
             name="query"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full rounded-3xl">
                 <FormControl>
-                  <Input {...field} placeholder="your file names" />
+                  <div className="flex w-[500px] items-center gap-0 rounded-3xl bg-white px-3 drop-shadow-sm">
+                    <SearchIcon />
+                    <Input
+                      className="border-none focus-visible:border-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                      {...field}
+                      placeholder="Search like a treasure hunt"
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          <Button
-            size="sm"
-            type="submit"
-            disabled={form.formState.isSubmitting}
-            className="flex gap-1"
-          >
-            {form.formState.isSubmitting && (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            )}
-            <SearchIcon /> Search
-          </Button>
         </form>
       </Form>
     </div>
-  );
+  )
 }

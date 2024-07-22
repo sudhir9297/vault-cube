@@ -1,19 +1,21 @@
-import { Doc, Id } from "../../../../convex/_generated/dataModel";
+import { Doc, Id } from '../../../../convex/_generated/dataModel'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu'
 import {
+  Download,
   FileIcon,
   MoreVertical,
   StarHalf,
   StarIcon,
+  StarOffIcon,
   TrashIcon,
   UndoIcon,
-} from "lucide-react";
+} from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,27 +25,27 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
-import { useToast } from "@/components/ui/use-toast";
-import { Protect } from "@clerk/nextjs";
+} from '@/components/ui/alert-dialog'
+import { useState } from 'react'
+import { useMutation, useQuery } from 'convex/react'
+import { api } from '../../../../convex/_generated/api'
+import { useToast } from '@/components/ui/use-toast'
+import { Protect } from '@clerk/nextjs'
 
 export function FileCardActions({
   file,
   isFavorited,
 }: {
-  file: Doc<"files"> & { url: string | null };
-  isFavorited: boolean;
+  file: Doc<'files'> & { url: string | null }
+  isFavorited: boolean
 }) {
-  const deleteFile = useMutation(api.files.deleteFile);
-  const restoreFile = useMutation(api.files.restoreFile);
-  const toggleFavorite = useMutation(api.files.toggleFavorite);
-  const { toast } = useToast();
-  const me = useQuery(api.users.getMe);
+  const deleteFile = useMutation(api.files.deleteFile)
+  const restoreFile = useMutation(api.files.restoreFile)
+  const toggleFavorite = useMutation(api.files.toggleFavorite)
+  const { toast } = useToast()
+  const me = useQuery(api.users.getMe)
 
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   return (
     <>
@@ -62,12 +64,12 @@ export function FileCardActions({
               onClick={async () => {
                 await deleteFile({
                   fileId: file._id,
-                });
+                })
                 toast({
-                  variant: "default",
-                  title: "File marked for deletion",
-                  description: "Your file will be deleted soon",
-                });
+                  variant: 'default',
+                  title: 'File marked for deletion',
+                  description: 'Your file will be deleted soon',
+                })
               }}
             >
               Continue
@@ -78,34 +80,34 @@ export function FileCardActions({
 
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <MoreVertical />
+          <MoreVertical strokeWidth={1} />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
             onClick={() => {
-              if (!file.url) return;
-              window.open(file.url, "_blank");
+              if (!file.url) return
+              window.open(file.url, '_blank')
             }}
-            className="flex gap-1 items-center cursor-pointer"
+            className="flex cursor-pointer items-center gap-2"
           >
-            <FileIcon className="w-4 h-4" /> Download
+            <Download className="h-4 w-4" /> Download
           </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={() => {
               toggleFavorite({
                 fileId: file._id,
-              });
+              })
             }}
-            className="flex gap-1 items-center cursor-pointer"
+            className="flex cursor-pointer items-center gap-2"
           >
             {isFavorited ? (
-              <div className="flex gap-1 items-center">
-                <StarIcon className="w-4 h-4" /> Unfavorite
+              <div className="flex items-center gap-2">
+                <StarOffIcon className="h-4 w-4" /> Unfavorite
               </div>
             ) : (
-              <div className="flex gap-1 items-center">
-                <StarHalf className="w-4 h-4" /> Favorite
+              <div className="flex items-center gap-2">
+                <StarIcon className="h-4 w-4" /> Favorite
               </div>
             )}
           </DropdownMenuItem>
@@ -114,9 +116,9 @@ export function FileCardActions({
             condition={(check) => {
               return (
                 check({
-                  role: "org:admin",
+                  role: 'org:admin',
                 }) || file.userId === me?._id
-              );
+              )
             }}
             fallback={<></>}
           >
@@ -126,20 +128,20 @@ export function FileCardActions({
                 if (file.shouldDelete) {
                   restoreFile({
                     fileId: file._id,
-                  });
+                  })
                 } else {
-                  setIsConfirmOpen(true);
+                  setIsConfirmOpen(true)
                 }
               }}
-              className="flex gap-1 items-center cursor-pointer"
+              className="flex cursor-pointer items-center gap-2"
             >
               {file.shouldDelete ? (
-                <div className="flex gap-1 text-green-600 items-center cursor-pointer">
-                  <UndoIcon className="w-4 h-4" /> Restore
+                <div className="flex cursor-pointer items-center gap-2 text-green-600">
+                  <UndoIcon className="h-4 w-4" /> Restore
                 </div>
               ) : (
-                <div className="flex gap-1 text-red-600 items-center cursor-pointer">
-                  <TrashIcon className="w-4 h-4" /> Delete
+                <div className="flex cursor-pointer items-center gap-2 text-red-600">
+                  <TrashIcon className="h-4 w-4" /> Delete
                 </div>
               )}
             </DropdownMenuItem>
@@ -147,5 +149,5 @@ export function FileCardActions({
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  );
+  )
 }

@@ -28,7 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Plus } from 'lucide-react'
 import { Doc } from '../../../../convex/_generated/dataModel'
 
 const formSchema = z.object({
@@ -69,6 +69,7 @@ export function UploadButton() {
     const { storageId } = await result.json()
 
     const types = {
+      'image/gif': 'image',
       'image/png': 'image',
       'image/jpg': 'image',
       'image/jpeg': 'image',
@@ -120,7 +121,10 @@ export function UploadButton() {
       }}
     >
       <DialogTrigger asChild>
-        <Button>Upload File</Button>
+        <div className="flex w-fit cursor-pointer items-center gap-1 rounded-3xl border px-4 py-3 shadow-lg hover:bg-slate-100">
+          <Plus />
+          <div className="text-black">Upload File</div>
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
