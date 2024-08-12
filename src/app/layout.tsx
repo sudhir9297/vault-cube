@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { Inter, Montserrat } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import './globals.css'
 import ConvexClientProvider from './ConvexClientProvider'
-import { Header } from './header'
+import { Header } from '../components/header'
 import { Toaster } from '@/components/ui/toaster'
 
 const inter = Montserrat({
